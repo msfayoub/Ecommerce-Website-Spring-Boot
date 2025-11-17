@@ -14,7 +14,9 @@
     <name>site_project</name>
     <description>Site project for Spring Boot</description>
     <properties>
-        <java.version>18</java.version>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <dependencies>
