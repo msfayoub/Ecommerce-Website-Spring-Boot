@@ -3,7 +3,7 @@ spring:
     # Add allowPublicKeyRetrieval=true and useSSL=false to the URL
     url: jdbc:mysql://localhost:3306/web_shop?allowPublicKeyRetrieval=true&useSSL=false
     username: root
-    password: root
+    password: AYOUBMOUSSAIFcs2006  # Change this!
   jpa:
     hibernate:
       ddl-auto: update
