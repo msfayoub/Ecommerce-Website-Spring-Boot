@@ -7,7 +7,7 @@ pipeline {
     }
     
     environment {
-        SONAR_TOKEN = credentials('sonarqube-token') // Use Jenkins credential instead!
+        SONAR_TOKEN = credentials('squ_95c956813886dc3da70d9dc50b54c5bc20c1a155') // Use Jenkins credential instead!
     }
     
     stages {
@@ -77,6 +77,7 @@ pipeline {
         }
         always {
             echo 'Nettoyage de l\'espace de travail...'
+
         }
     }
 }
