@@ -1,7 +1,7 @@
 spring:
   datasource:
     # Add allowPublicKeyRetrieval=true and useSSL=false to the URL
-    url: jdbc:mysql://localhost:3306/web_shop?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/web_store_test?allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: AYOUBMOUSSAIFcs2006  # Change this!
   jpa:
