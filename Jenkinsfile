@@ -77,7 +77,6 @@ pipeline {
         }
         always {
             echo 'Nettoyage de l\'espace de travail...'
-            cleanWs()
         }
     }
 }
