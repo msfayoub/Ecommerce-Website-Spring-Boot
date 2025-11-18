@@ -6,7 +6,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class WebStoreApplicationTests extends BaseIntegrationTest{
+class WebStoreApplicationTests {
     @Test
     void contextLoads() {
     }
