@@ -7,7 +7,7 @@ pipeline {
     }
     
     environment {
-        SONAR_TOKEN = 'squ_95c956813886dc3da70d9dc50b54c5bc20c1a155' 
+        SONAR_TOKEN = credentials('sonarqube-token') // Use Jenkins credential instead!
     }
     
     stages {
@@ -27,16 +27,21 @@ pipeline {
             }
         }
         
-        stage('3. Lancer les tests unitaires') {
+        stage('3. Lancer les tests unitaires avec JaCoCo') {
             steps {
                 script {
-                    echo 'Exécution des tests unitaires...'
-                    bat 'mvn test -DfailIfNoTests=false -Dmaven.test.failure.ignore=true'
+                    echo 'Exécution des tests avec couverture de code...'
+                    bat 'mvn test jacoco:report'
                 }
             }
             post {
                 always {
                     junit '**/target/surefire-reports/*.xml'
+                    jacoco(
+                        execPattern: '**/target/jacoco.exec',
+                        classPattern: '**/target/classes',
+                        sourcePattern: '**/src/main/java'
+                    )
                 }
             }
         }
@@ -50,7 +55,7 @@ pipeline {
                     -Dsonar.projectName="Ecommerce Spring Boot" ^
                     -Dsonar.host.url=http://localhost:9000 ^
                     -Dsonar.token=%SONAR_TOKEN% ^
-                    -DskipTests
+                    -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                 """
             }
         }
