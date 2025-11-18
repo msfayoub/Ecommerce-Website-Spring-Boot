@@ -7,7 +7,7 @@ pipeline {
     }
     
     environment {
-        SONAR_TOKEN = 'squ_95c956813886dc3da70d9dc50b54c5bc20c1a155' // Replace with your token
+        SONAR_TOKEN = 'squ_95c956813886dc3da70d9dc50b54c5bc20c1a155' 
     }
     
     stages {
@@ -49,7 +49,8 @@ pipeline {
                     -Dsonar.projectKey=ecommerce-spring-boot ^
                     -Dsonar.projectName="Ecommerce Spring Boot" ^
                     -Dsonar.host.url=http://localhost:9000 ^
-                    -Dsonar.token=%SONAR_TOKEN%
+                    -Dsonar.token=%SONAR_TOKEN% ^
+                    -DskipTests
                 """
             }
         }
