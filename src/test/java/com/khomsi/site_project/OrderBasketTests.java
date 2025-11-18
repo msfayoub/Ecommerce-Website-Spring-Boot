@@ -6,18 +6,14 @@ import com.khomsi.site_project.entity.User;
 import com.khomsi.site_project.repository.OrderBasketRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Rollback(value = false)
+
 public class OrderBasketTests extends BaseIntegrationTest {
+
     @Autowired
     private OrderBasketRepository orderBasketRep;
 
@@ -26,49 +22,37 @@ public class OrderBasketTests extends BaseIntegrationTest {
 
     @Test
     public void testAddOneOrderBasketProduct() {
+        // Product id 6 exists in your SQL (Dell XPS 15)
         Product product = entityManager.find(Product.class, 6);
-        User user = entityManager.find(User.class, 8);
+        // User id 1 exists in your SQL
+        User user = entityManager.find(User.class, 1);
+
+        assertNotNull(product, "Product with id=6 must exist in test-data.sql");
+        assertNotNull(user, "User with id=1 must exist in test-data.sql");
 
         OrderBasket newOrderBasket = new OrderBasket();
-
         newOrderBasket.setUser(user);
         newOrderBasket.setProduct(product);
         newOrderBasket.setQuantity(1);
 
+        OrderBasket savedOrderBasket = orderBasketRep.save(newOrderBasket);
 
-        OrderBasket saveOrderBasketProd = orderBasketRep.save(newOrderBasket);
-
-        assertTrue(saveOrderBasketProd.getId() > 0);
+        assertNotNull(savedOrderBasket.getId());
+        assertTrue(savedOrderBasket.getId() > 0);
     }
 
     @Test
     public void testGetOrderBasketProdByUser() {
-        User user = new User();
-        user.setId(8);
+        // Get the managed User entity with id 1
+        User user = entityManager.find(User.class, 1);
+        assertNotNull(user, "User with id=1 must exist in test-data.sql");
 
         List<OrderBasket> orderBaskets = orderBasketRep.findByUser(user);
 
-        assertEquals(1, orderBaskets.size());
-
+        // In your SQL you have:
+        // (1, 1, 2, 1),
+        // (2, 2, 1, 1),
+        // so user 1 has exactly 2 order_basket rows.
+        assertEquals(2, orderBaskets.size());
     }
-
-//    @Test
-//    public String getProductsFromBasketsToOrder(List<OrderBasket> orderBaskets) {
-//        Product product = entityManager.find(Product.class, 6);
-//        User user = entityManager.find(User.class, 1);
-//
-//        OrderBasket newOrderBasket = new OrderBasket();
-//
-//        newOrderBasket.setUser(user);
-//        newOrderBasket.setProduct(product);
-//        newOrderBasket.setQuantity(1);
-//
-//        String result = null;
-//        if (!orderBaskets.isEmpty()) {
-//            for (OrderBasket orderBasket : orderBaskets) {
-//                result += String.valueOf(orderBasket.getProduct().getId()) + "/";
-//            }
-//        }
-//        return result;
-//    }
 }
