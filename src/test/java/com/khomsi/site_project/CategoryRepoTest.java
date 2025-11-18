@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class CategoryRepoTest {
+public class CategoryRepoTest extends BaseIntegrationTest{
     @Autowired
     private CategoryRepository categoryRep;
 

@@ -12,7 +12,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class ProductRepositoryTest {
+public class ProductRepositoryTest extends BaseIntegrationTest{
     @Autowired
     ProductRepository productRepository;
 

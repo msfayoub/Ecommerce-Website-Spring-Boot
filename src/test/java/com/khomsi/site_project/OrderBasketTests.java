@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Rollback(value = false)
-public class OrderBasketTests {
+public class OrderBasketTests extends BaseIntegrationTest {
     @Autowired
     private OrderBasketRepository orderBasketRep;
 
