@@ -18,8 +18,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @DataJpaTest
-// @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Disabled("Missing test data - to be fixed later")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ProductTest extends BaseIntegrationTest{
     @Autowired
     private ProductRepository productRepo;
