@@ -7,77 +7,71 @@ pipeline {
     }
     
     environment {
-        SONAR_TOKEN = credentials('squ_95c956813886dc3da70d9dc50b54c5bc20c1a155') // Use Jenkins credential instead!
+        SONAR_HOST_URL = 'http://localhost:9000'
+        SONAR_TOKEN = credentials('sonar-token')
     }
     
     stages {
-        stage('1. Cloner le repo') {
+        stage('1. Checkout Code') {
             steps {
-                script {
-                    echo 'Clonage du repository depuis GitHub...'
-                    checkout scm
-                }
+                git branch: 'master',
+                    url: 'https://github.com/msfayoub/Ecommerce-Website-Spring-Boot.git'
             }
         }
         
-        stage('2. Compiler le projet') {
+        stage('2. Build Maven') {
             steps {
-                echo 'Compilation du projet Maven...'
-                bat 'mvn clean compile'
+                bat 'mvn clean install -DskipTests'
             }
         }
         
-        stage('3. Lancer les tests unitaires avec JaCoCo') {
+        stage('3. Run Tests') {
             steps {
                 script {
-                    echo 'Exécution des tests avec couverture de code...'
-                    bat 'mvn test jacoco:report'
+                    bat 'mvn test'
                 }
             }
             post {
                 always {
                     junit '**/target/surefire-reports/*.xml'
-                    jacoco(
-                        execPattern: '**/target/jacoco.exec',
-                        classPattern: '**/target/classes',
-                        sourcePattern: '**/src/main/java'
-                    )
+                    jacoco()
                 }
             }
         }
         
         stage('4. Analyse SonarQube') {
             steps {
-                echo 'Analyse de la qualité du code avec SonarQube...'
-                bat """
-                    mvn sonar:sonar ^
-                    -Dsonar.projectKey=ecommerce-spring-boot ^
-                    -Dsonar.projectName="Ecommerce Spring Boot" ^
-                    -Dsonar.host.url=http://localhost:9000 ^
-                    -Dsonar.token=%SONAR_TOKEN% ^
-                    -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-                """
+                script {
+                    withSonarQubeEnv('SonarQube') {
+                        bat """
+                            mvn sonar:sonar ^
+                            -Dsonar.projectKey=ecommerce-website ^
+                            -Dsonar.projectName="Ecommerce Website" ^
+                            -Dsonar.host.url=%SONAR_HOST_URL% ^
+                            -Dsonar.login=%SONAR_TOKEN%
+                        """
+                    }
+                }
             }
         }
         
         stage('5. Générer le package JAR') {
             steps {
-                echo 'Génération du package JAR...'
                 bat 'mvn package -DskipTests'
             }
         }
     }
     
     post {
+        always {
+            echo 'Nettoyage de l\'espace de travail...'
+            // cleanWs() - Remove this or keep it inside node context
+        }
         success {
-            echo '✓ Le pipeline s\'est terminé avec succès.'
+            echo '✓ Le pipeline a réussi!'
         }
         failure {
             echo '✗ Le pipeline a échoué.'
-        }
-        always {
-            echo 'Nettoyage de l\'espace de travail...'
-            cleanWs()
         }
     }
 }
