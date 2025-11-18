@@ -8,7 +8,6 @@ pipeline {
     
     environment {
         SONAR_HOST_URL = 'http://localhost:9000'
-        SONAR_TOKEN = credentials('squ_95c956813886dc3da70d9dc50b54c5bc20c1a155')
     }
     
     stages {
@@ -27,9 +26,7 @@ pipeline {
         
         stage('3. Run Tests') {
             steps {
-                script {
-                    bat 'mvn test'
-                }
+                bat 'mvn test'
             }
             post {
                 always {
@@ -41,14 +38,14 @@ pipeline {
         
         stage('4. Analyse SonarQube') {
             steps {
-                script {
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv('SonarQube') {
                         bat """
                             mvn sonar:sonar ^
                             -Dsonar.projectKey=ecommerce-website ^
                             -Dsonar.projectName="Ecommerce Website" ^
                             -Dsonar.host.url=%SONAR_HOST_URL% ^
-                            -Dsonar.login=%SONAR_TOKEN%
+                            -Dsonar.token=%SONAR_TOKEN%
                         """
                     }
                 }
@@ -63,10 +60,6 @@ pipeline {
     }
     
     post {
-        always {
-            echo 'Nettoyage de l\'espace de travail...'
-            // cleanWs() - Remove this or keep it inside node context
-        }
         success {
             echo '✓ Le pipeline a réussi!'
         }
