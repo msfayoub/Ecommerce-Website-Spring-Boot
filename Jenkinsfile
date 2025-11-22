@@ -6,78 +6,54 @@ pipeline {
         jdk 'JDK-17'
     }
 
-    environment {
-        SONAR_TOKEN = credentials('squ_95c956813886dc3da70d9dc50b54c5bc20c1a155')
-    }
-
     stages {
-        stage('1. Cloner le dépôt') {
+        stage('1. Checkout') {
             steps {
-                echo 'Clonage du repository depuis GitHub...'
                 checkout scm
             }
         }
 
-        stage('2. Compiler le projet') {
+        stage('2. Build') {
             steps {
-                echo 'Compilation du projet Maven...'
-                bat 'mvn clean compile'
+                bat 'mvn clean install -DskipTests'
             }
         }
 
-        stage('3. Lancer les tests unitaires avec JaCoCo') {
+        stage('3. Test') {
             steps {
-                echo 'Exécution des tests avec couverture de code...'
-                bat 'mvn test jacoco:report'
+                bat 'mvn test'
             }
             post {
                 always {
-                    junit 'target/surefire-reports/*.xml'
-                    jacoco(
-                        execPattern: 'target/jacoco.exec',
-                        classPattern: 'target/classes',
-                        sourcePattern: 'src/main/java'
-                    )
+                    junit '**/target/surefire-reports/*.xml'
                 }
             }
         }
 
-        stage('4. Analyse SonarQube') {
+        stage('4. Package') {
             steps {
-                echo 'Analyse de la qualité du code avec SonarQube...'
-                withSonarQubeEnv('Sonar-Server') {
-                    bat """
-                        mvn sonar:sonar ^
-                        -Dsonar.projectKey=ecommerce-spring-boot ^
-                        -Dsonar.projectName="Ecommerce Spring Boot" ^
-                        -Dsonar.login=${SONAR_TOKEN} ^
-                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-                    """
-                }
-            }
-        }
-
-        stage('5. Générer le package JAR') {
-            steps {
-                echo 'Génération du package JAR...'
                 bat 'mvn package -DskipTests'
             }
         }
 
-        stage('6. Nettoyage') {
+        stage('5. SonarQube Analysis') {
             steps {
-                echo 'Nettoyage de l\'espace de travail...'
-                cleanWs()
+                script {
+                    withSonarQubeEnv('SonarQube') {
+                        bat 'mvn sonar:sonar -Dsonar.projectKey=ecommerce-website -Dsonar.token=squ_95c956813886dc3da70d9dc50b54c5bc20c1a155'
+                    }
+                }
             }
         }
     }
 
     post {
         success {
-            echo '✓ Le pipeline s\'est terminé avec succès.'
+            echo '✓ Pipeline succeeded!'
+            archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
         }
         failure {
-            echo '✗ Le pipeline a échoué.'
+            echo '✗ Pipeline failed!'
         }
     }
 }
