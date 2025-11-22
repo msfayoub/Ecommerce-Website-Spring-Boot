@@ -75,10 +75,7 @@ pipeline {
         }
         always {
             echo 'Nettoyage de l\'espace de travail...'
-            // FIX: ensure workspace context is available
-            node {
-                cleanWs()
-            }
+            deleteDir()
         }
     }
 }
