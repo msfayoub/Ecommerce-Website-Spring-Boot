@@ -72,7 +72,8 @@ public class ProductService implements IProductService {
         }
         Collections.shuffle(productList);
         int randomSeriesLength = 8;
-        return productList.subList(0, randomSeriesLength);
+        int toIndex = Math.min(randomSeriesLength, productList.size()); // <-- clé du fix
+        return productList.subList(0, toIndex);
 
     }
 
