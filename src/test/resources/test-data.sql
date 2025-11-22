@@ -1,12 +1,12 @@
 -- Insert vendors FIRST (required for foreign key constraints)
-INSERT IGNORE INTO vendor (id, title) VALUES 
+REPLACE INTO vendor (id, title) VALUES 
 (1, 'Apple'),
 (2, 'Samsung'),
 (3, 'Dell'),
 (999, 'Test Vendor');
 
 -- Insert categories with proper hierarchy
-INSERT IGNORE INTO category (id, title, alias, enabled, image, parent_id, all_parent_ids) VALUES
+REPLACE INTO category (id, title, alias, enabled, image, parent_id, all_parent_ids) VALUES
 -- Root categories
 (1, 'Electronics', 'electronics', true, 'electronics.jpg', NULL, NULL),
 (2, 'Computers', 'computers', true, 'computers.jpg', 1, '1'),
@@ -19,12 +19,12 @@ INSERT IGNORE INTO category (id, title, alias, enabled, image, parent_id, all_pa
 (6, 'Sensor phones', 'sensor-phones', true, 'sensor-phones.jpg', 3, '1-3');
 
 -- Insert users (required for order basket tests)
-INSERT IGNORE INTO user (id, login, email, password, role) VALUES
+REPLACE INTO user (id, login, email, password, role) VALUES
 (1, 'admin', 'test@example.com', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'USER'),
 (999, 'testuser999', 'test999@example.com', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'USER');
 
 -- Insert products (with valid vendor_id and category_id)
-INSERT IGNORE INTO product (id, title, alias, description, price, image, category_id, vendor_id) VALUES
+REPLACE INTO product (id, title, alias, description, price, image, category_id, vendor_id) VALUES
 -- Products for general tests
 (1, 'Test Product', 'test-product', 'Test Description', 99.99, 'test.jpg', 1, 1),
 (2, 'Another Product', 'another-product', 'Another Description', 149.99, 'another.jpg', 2, 1),
@@ -39,7 +39,7 @@ INSERT IGNORE INTO product (id, title, alias, description, price, image, categor
 (6, 'Dell XPS 15', 'dell-xps-15', 'High performance Dell laptop', 1499.99, 'xps15.jpg', 4, 3);
 
 -- Insert order basket items (for testGetOrderBasketProdByUser)
-INSERT IGNORE INTO order_basket (id, product_id, quantity, user_id) VALUES
+REPLACE INTO order_basket (id, product_id, quantity, user_id) VALUES
 (1, 1, 2, 1),
 (2, 2, 1, 1),
 (999, 999, 1, 999);
