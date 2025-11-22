@@ -73,9 +73,9 @@ pipeline {
         failure {
             echo '✗ Le pipeline a échoué.'
         }
-        always {
-            echo 'Nettoyage de l\'espace de travail...'
-            cleanWs()
-        }
+        // always {
+        //     echo 'Nettoyage de l\'espace de travail...'
+        //     cleanWs()
+        // }
     }
 }
