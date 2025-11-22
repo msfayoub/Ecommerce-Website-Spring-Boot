@@ -51,7 +51,7 @@ pipeline {
                         mvn sonar:sonar ^
                         -Dsonar.projectKey=ecommerce-spring-boot ^
                         -Dsonar.projectName="Ecommerce Spring Boot" ^
-                        -Dsonar.login=%SONAR_TOKEN% ^
+                        -Dsonar.login=${SONAR_TOKEN} ^
                         -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                     """
                 }
@@ -75,7 +75,7 @@ pipeline {
         }
         always {
             echo 'Nettoyage de l\'espace de travail...'
-            deleteDir()
+            cleanWs()
         }
     }
 }
