@@ -27,7 +27,7 @@ public class CategoryRepoTest extends BaseIntegrationTest{
 
     @Test
     void categoryFindByAlias() {
-        String alias = "electronics";
+        String alias = "test-electronics";
 
         Category category = categoryRep.findByAliasEnabled(alias);
 
