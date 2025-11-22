@@ -11,7 +11,6 @@ pipeline {
     }
 
     stages {
-
         stage('1. Cloner le dépôt') {
             steps {
                 echo 'Clonage du repository depuis GitHub...'
@@ -64,6 +63,13 @@ pipeline {
                 bat 'mvn package -DskipTests'
             }
         }
+
+        stage('6. Nettoyage') {
+            steps {
+                echo 'Nettoyage de l\'espace de travail...'
+                cleanWs()
+            }
+        }
     }
 
     post {
@@ -73,9 +79,5 @@ pipeline {
         failure {
             echo '✗ Le pipeline a échoué.'
         }
-        // always {
-        //     echo 'Nettoyage de l\'espace de travail...'
-        //     cleanWs()
-        // }
     }
 }
